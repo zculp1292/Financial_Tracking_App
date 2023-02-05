@@ -1,4 +1,4 @@
-import mysql.connector as connecttion
+import mysql.connector as connection
 
 class User:
     def __init__(self, user_id):

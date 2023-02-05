@@ -7,73 +7,119 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+import mysql.connector as sql_db_connect
 
 
 class Ui_Form(object):
+    def __init__(self):
+        self.le_username = QtWidgets.QLineEdit(parent=Form)
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(Form)
+        self.label_4 = QtWidgets.QLabel(parent=Form)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.label = QtWidgets.QLabel(parent=Form)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.label_2 = QtWidgets.QLabel(parent=Form)
+        self.le_password = QtWidgets.QLineEdit(parent=Form)
+        self.pb_login = QtWidgets.QPushButton(parent=Form)
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
+        self.label_3 = QtWidgets.QLabel(parent=Form)
+        self.pb_signup = QtWidgets.QPushButton(parent=Form)
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(400, 300)
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(Form)
+
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.label_4 = QtWidgets.QLabel(parent=Form)
+
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_4.setFont(font)
         self.label_4.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.label_4.setObjectName("label_4")
         self.verticalLayout_5.addWidget(self.label_4)
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
+
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(parent=Form)
+
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
-        self.lineEdit = QtWidgets.QLineEdit(parent=Form)
-        self.lineEdit.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.lineEdit.setObjectName("lineEdit")
-        self.verticalLayout.addWidget(self.lineEdit)
+
+        self.le_username.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.le_username.setObjectName("lineEdit")
+        self.verticalLayout.addWidget(self.le_username)
         self.verticalLayout_3.addLayout(self.verticalLayout)
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.label_2 = QtWidgets.QLabel(parent=Form)
+
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_2.setFont(font)
         self.label_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.verticalLayout_2.addWidget(self.label_2)
-        self.lineEdit_2 = QtWidgets.QLineEdit(parent=Form)
-        self.lineEdit_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.verticalLayout_2.addWidget(self.lineEdit_2)
+
+        self.le_password.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.le_password.setObjectName("lineEdit_2")
+        self.verticalLayout_2.addWidget(self.le_password)
         self.verticalLayout_3.addLayout(self.verticalLayout_2)
-        self.pushButton = QtWidgets.QPushButton(parent=Form)
-        self.pushButton.setObjectName("pushButton")
-        self.verticalLayout_3.addWidget(self.pushButton)
+
+        self.pb_login.setObjectName("pushButton")
+        self.verticalLayout_3.addWidget(self.pb_login)
         self.verticalLayout_5.addLayout(self.verticalLayout_3)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout_5.addItem(spacerItem)
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
+
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.label_3 = QtWidgets.QLabel(parent=Form)
+
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_3.setFont(font)
         self.label_3.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.verticalLayout_4.addWidget(self.label_3)
-        self.pushButton_2 = QtWidgets.QPushButton(parent=Form)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.verticalLayout_4.addWidget(self.pushButton_2)
+
+        self.pb_signup.setObjectName("pushButton_2")
+        self.verticalLayout_4.addWidget(self.pb_signup)
         self.verticalLayout_5.addLayout(self.verticalLayout_4)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+        self.pb_login.clicked.connect(self.Login)
+    def Login(self):
+        username = self.le_username.text()
+        password = self.le_password.text()
+
+        try:
+            db_data = sql_db_connect.connect(
+                host="127.0.0.1",
+                port="9000",
+                user="root",
+                password="root",
+                database="finance_tracker"
+            )
+            data_handle = db_data.cursor()
+
+            login_query = "SELECT * FROM users WHERE username = '{}' and password = '{}';".format(username, password)
+
+            data_handle.execute(login_query)
+            db_result = data_handle.fetchone()
+
+            if db_result is not None:
+                dlg = LoginSDialog(db_result)
+                dlg.exec()
+            else:
+                dlg = LoginFDialog()
+                dlg.exec()
+            
+        except sql_db_connect.error as e:
+            print('Connection Error')
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -81,9 +127,49 @@ class Ui_Form(object):
         self.label_4.setText(_translate("Form", "Financial Tracking Application"))
         self.label.setText(_translate("Form", "Enter Username:"))
         self.label_2.setText(_translate("Form", "Enter Password:"))
-        self.pushButton.setText(_translate("Form", "Login"))
+        self.pb_login.setText(_translate("Form", "Login"))
         self.label_3.setText(_translate("Form", "New Account?"))
-        self.pushButton_2.setText(_translate("Form", "Sign-Up Now!"))
+        self.pb_signup.setText(_translate("Form", "Sign-Up Now!"))
+
+
+class LoginSDialog(QtWidgets.QDialog):
+    def __init__(self, login_data):
+        super().__init__()
+
+        self.login_data = login_data
+        user_id = self.login_data[0]
+        first_name = self.login_data[1]
+        last_name = self.login_data[2]
+
+        self.setWindowTitle("Successful Login")
+        QBtn = QtWidgets.QDialogButtonBox.StandardButton.Ok
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QtWidgets.QVBoxLayout()
+        message = QtWidgets.QLabel("User ID = {userId}\nFirst Name = {firstName}\nLast Name = {lastName}"
+                                   .format(userId = user_id, firstName = first_name, lastName = last_name))
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
+
+class LoginFDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Failed Login")
+        QBtn = QtWidgets.QDialogButtonBox.StandardButton.Ok
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QtWidgets.QVBoxLayout()
+        message = QtWidgets.QLabel("Login Failed!\nPlease Try Again\nOr Make An Account")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
 
 
 if __name__ == "__main__":

@@ -7,9 +7,10 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+import mysql.connector as sql_db_connect
 
 
-class Ui_Form(object):
+class Sign_Up_One_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(500, 310)
@@ -109,6 +110,54 @@ class Ui_Form(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+        self.btn_next_step.clicked.connect(self.next_step)
+
+    def next_step(self):
+        first_name = self.le_first_name.text()
+        last_name = self.le_last_name.text()
+        dob = self.le_dob.text()
+        username = self.le_username.text()
+        password_one = self.le_password_one.text()
+        password_two = self.le_password_two.text()
+
+        username_query = "SELECT * FROM users WHERE username = '{}'".format(username)
+
+        try:
+            db_data = sql_db_connect.connect(
+                host="127.0.0.1",
+                port="9000",
+                user="root",
+                password="root",
+                database="finance_tracker"
+            )
+            data_handle = db_data.cursor()
+
+        except sql_db_connect.error as e:
+            print('Connection Error')
+
+        data_handle.execute(username_query)
+        db_username_result = data_handle.fetchone()
+
+        if db_username_result is not None:
+            dlg = IncorrectUsernameDialog()
+            dlg.exec()
+
+            self.le_username.setText("")
+            return
+
+        if password_one != password_two:
+            dlg = IncorrectPasswordsDialog()
+            dlg.exec()
+
+            self.le_password_one.setText("")
+            self.le_password_two.setText("")
+            return
+
+        new_account_data = [first_name, last_name, dob, username, password_one]
+        print("First Name = {}\nLast Name = {}\nDate of Birth = {}\nUsername = {}\nPassword = {}"
+              .format(new_account_data[0], new_account_data[1], new_account_data[2],
+                      new_account_data[3], new_account_data[4]))
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
@@ -119,16 +168,49 @@ class Ui_Form(object):
         self.label_5.setText(_translate("Form", "Now, some information about your new account!"))
         self.label_6.setText(_translate("Form", "Username:"))
         self.label_7.setText(_translate("Form", "Password:"))
-        self.label_8.setText(_translate("Form", "Re-enter \n"
-"Password:"))
+        self.label_8.setText(_translate("Form", "Re-enter \nPassword:"))
         self.btn_next_step.setText(_translate("Form", "Next Step"))
+
+
+class IncorrectPasswordsDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Mis-Match Passwords")
+        QBtn = QtWidgets.QDialogButtonBox.StandardButton.Ok
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QtWidgets.QVBoxLayout()
+        message = QtWidgets.QLabel("The passwords you entered do not match.\n"
+                                   "Please try again!")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
+
+class IncorrectUsernameDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Username Taken")
+        QBtn = QtWidgets.QDialogButtonBox.StandardButton.Ok
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QtWidgets.QVBoxLayout()
+        message = QtWidgets.QLabel("The username you entered is already in use.\n"
+                                   "Please try again!")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
+    ui = Sign_Up_One_Form()
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec())

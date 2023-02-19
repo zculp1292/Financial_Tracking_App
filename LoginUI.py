@@ -8,27 +8,31 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 import mysql.connector as sql_db_connect
+import AccountCreationUI_StepOne
 
 
-class Ui_Form(object):
+class Login_Form(QtWidgets.QWidget):
     def __init__(self):
-        self.le_username = QtWidgets.QLineEdit(parent=Form)
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(Form)
-        self.label_4 = QtWidgets.QLabel(parent=Form)
+        super().__init__()
+
+        self.sign_up_window = None
+
+        self.le_username = QtWidgets.QLineEdit()
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout()
+        self.label_4 = QtWidgets.QLabel()
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.label = QtWidgets.QLabel(parent=Form)
+        self.label = QtWidgets.QLabel()
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.label_2 = QtWidgets.QLabel(parent=Form)
-        self.le_password = QtWidgets.QLineEdit(parent=Form)
-        self.pb_login = QtWidgets.QPushButton(parent=Form)
+        self.label_2 = QtWidgets.QLabel()
+        self.le_password = QtWidgets.QLineEdit()
+        self.pb_login = QtWidgets.QPushButton()
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
-        self.label_3 = QtWidgets.QLabel(parent=Form)
-        self.pb_signup = QtWidgets.QPushButton(parent=Form)
+        self.label_3 = QtWidgets.QLabel()
+        self.pb_signup = QtWidgets.QPushButton()
 
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 300)
+        self.setGeometry(700, 400, 400, 200)
+        self.setWindowTitle("Application Login")
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -74,10 +78,13 @@ class Ui_Form(object):
         self.pb_signup.setObjectName("pushButton_2")
         self.verticalLayout_4.addWidget(self.pb_signup)
         self.verticalLayout_5.addLayout(self.verticalLayout_4)
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(self)
+        QtCore.QMetaObject.connectSlotsByName(self)
 
         self.pb_login.clicked.connect(self.login)
+        self.pb_signup.clicked.connect(self.sign_up)
+
+        self.setLayout(self.verticalLayout_5)
 
     def login(self):
         username = self.le_username.text()
@@ -98,11 +105,11 @@ class Ui_Form(object):
             data_handle.execute(login_query)
             db_login_result = data_handle.fetchone()
 
-            account_query = "SELECT * FROM accounts WHERE userID = '{}'".format(db_login_result[0])
-            data_handle.execute(account_query)
-            db_account_result = data_handle.fetchone()
-
             if db_login_result is not None:
+                account_query = "SELECT * FROM accounts WHERE userID = '{}'".format(db_login_result[0])
+                data_handle.execute(account_query)
+                db_account_result = data_handle.fetchone()
+
                 dlg = LoginSDialog(db_login_result, db_account_result)
                 dlg.exec()
             else:
@@ -111,6 +118,12 @@ class Ui_Form(object):
 
         except sql_db_connect.error as e:
             print('Connection Error')
+
+    def sign_up(self):
+        if self.sign_up_window is None:
+            self.sign_up_window = AccountCreationUI_StepOne.Sign_Up_One_Form()
+
+        self.sign_up_window.show()
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -167,7 +180,7 @@ class LoginFDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
-
+'''
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -176,3 +189,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec())
+'''

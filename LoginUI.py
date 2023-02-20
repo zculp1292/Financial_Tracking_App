@@ -15,6 +15,7 @@ class Login_Form(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
+        login_pass = self
         self.sign_up_window = None
 
         self.le_username = QtWidgets.QLineEdit()
@@ -82,7 +83,7 @@ class Login_Form(QtWidgets.QWidget):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.pb_login.clicked.connect(self.login)
-        self.pb_signup.clicked.connect(self.sign_up)
+        self.pb_signup.clicked.connect(lambda: self.sign_up(login_pass))
 
         self.setLayout(self.verticalLayout_5)
 
@@ -119,9 +120,9 @@ class Login_Form(QtWidgets.QWidget):
         except sql_db_connect.error as e:
             print('Connection Error')
 
-    def sign_up(self):
+    def sign_up(self, login_pass):
         if self.sign_up_window is None:
-            self.sign_up_window = AccountCreationUI_StepOne.Sign_Up_One_Form()
+            self.sign_up_window = AccountCreationUI_StepOne.Sign_Up_One_Form(login_pass)
 
         self.sign_up_window.show()
 

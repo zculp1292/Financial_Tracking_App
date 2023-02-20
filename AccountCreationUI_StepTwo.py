@@ -9,11 +9,13 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class Ui_FinishAccountSetUp(object):
-    def setupUi(self, FinishAccountSetUp):
-        FinishAccountSetUp.setObjectName("FinishAccountSetUp")
-        FinishAccountSetUp.resize(500, 300)
-        self.label_2 = QtWidgets.QLabel(parent=FinishAccountSetUp)
+class Ui_FinishAccountSetUp(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setGeometry(700, 400, 550, 300)
+        self.setWindowTitle("Application Login")
+        self.label_2 = QtWidgets.QLabel(parent=self)
         self.label_2.setGeometry(QtCore.QRect(160, 10, 331, 111))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -21,43 +23,43 @@ class Ui_FinishAccountSetUp(object):
         self.label_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
-        self.label_4 = QtWidgets.QLabel(parent=FinishAccountSetUp)
+        self.label_4 = QtWidgets.QLabel(parent=self)
         self.label_4.setGeometry(QtCore.QRect(150, 180, 200, 25))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
-        self.pushButton = QtWidgets.QPushButton(parent=FinishAccountSetUp)
+        self.pushButton = QtWidgets.QPushButton(parent=self)
         self.pushButton.setGeometry(QtCore.QRect(190, 230, 100, 25))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
-        self.widget = QtWidgets.QWidget(parent=FinishAccountSetUp)
+        self.widget = QtWidgets.QWidget(parent=self)
         self.widget.setGeometry(QtCore.QRect(10, 10, 105, 73))
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(parent=self.widget)
+        self.label = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
-        self.rb_checking = QtWidgets.QRadioButton(parent=self.widget)
+        self.rb_checking = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(10)
         self.rb_checking.setFont(font)
         self.rb_checking.setObjectName("rb_checking")
         self.verticalLayout.addWidget(self.rb_checking)
-        self.rb_savings = QtWidgets.QRadioButton(parent=self.widget)
+        self.rb_savings = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(10)
         self.rb_savings.setFont(font)
         self.rb_savings.setObjectName("rb_savings")
         self.verticalLayout.addWidget(self.rb_savings)
-        self.widget1 = QtWidgets.QWidget(parent=FinishAccountSetUp)
+        self.widget1 = QtWidgets.QWidget(parent=self)
         self.widget1.setGeometry(QtCore.QRect(10, 90, 135, 49))
         self.widget1.setObjectName("widget1")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget1)
@@ -76,8 +78,10 @@ class Ui_FinishAccountSetUp(object):
         self.le_startBalance.setObjectName("le_startBalance")
         self.verticalLayout_3.addWidget(self.le_startBalance)
 
-        self.retranslateUi(FinishAccountSetUp)
-        QtCore.QMetaObject.connectSlotsByName(FinishAccountSetUp)
+        self.retranslateUi(self)
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+        self.setLayout(self.verticalLayout_3)
 
     def retranslateUi(self, FinishAccountSetUp):
         _translate = QtCore.QCoreApplication.translate
@@ -91,7 +95,7 @@ class Ui_FinishAccountSetUp(object):
         self.label_3.setText(_translate("FinishAccountSetUp", "Starting Balance:"))
         self.le_startBalance.setText(_translate("FinishAccountSetUp", "0.00"))
 
-
+'''
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -100,3 +104,4 @@ if __name__ == "__main__":
     ui.setupUi(FinishAccountSetUp)
     FinishAccountSetUp.show()
     sys.exit(app.exec())
+'''

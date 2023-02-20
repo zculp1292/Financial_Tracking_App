@@ -8,10 +8,11 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 import mysql.connector as sql_db_connect
+import AccountCreationUI_StepTwo
 
 
 class Sign_Up_One_Form(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, login_form):
         super().__init__()
 
         self.setGeometry(700, 400, 400, 200)
@@ -114,9 +115,10 @@ class Sign_Up_One_Form(QtWidgets.QWidget):
 
         self.setLayout(self.gridLayout)
 
-        self.btn_next_step.clicked.connect(self.next_step)
+        self.btn_next_step.clicked.connect(lambda: self.next_step(login_form))
 
-    def next_step(self):
+
+    def next_step(self, login_form):
         first_name = self.le_first_name.text()
         last_name = self.le_last_name.text()
         dob = self.le_dob.text()
@@ -161,6 +163,9 @@ class Sign_Up_One_Form(QtWidgets.QWidget):
         print("First Name = {}\nLast Name = {}\nDate of Birth = {}\nUsername = {}\nPassword = {}"
               .format(new_account_data[0], new_account_data[1], new_account_data[2],
                       new_account_data[3], new_account_data[4]))
+
+        login_form.sign_up_window = AccountCreationUI_StepTwo.Ui_FinishAccountSetUp()
+        login_form.sign_up_window.show()
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
